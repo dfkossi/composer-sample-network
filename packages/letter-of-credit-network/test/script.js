@@ -26,7 +26,7 @@ chai.use(require('chai-as-promised'));
 const namespace = 'org.example.loc';
 const letterId = 'L123';
 
-describe('Letters of Credit Network', () => {
+describe('Letter of Credit Network', () => {
     const cardStore = require('composer-common').NetworkCardStoreManager.getCardStore( { type: 'composer-wallet-inmemory' } );
     let adminConnection;
     let businessNetworkConnection;

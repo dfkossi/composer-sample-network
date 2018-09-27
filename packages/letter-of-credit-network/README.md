@@ -1,6 +1,6 @@
-# Letters of Credit Network
+# Letter of Credit Network
 
-> This network tracks letters of credit from application through to closure.
+> This network tracks letter of credit from application through to closure.
 
 ## Models within this business network
 
@@ -244,7 +244,7 @@ Submit a `Close` transaction:
 
 This transaction updates the `status` of the letter to be `CLOSED`. The letter is now complete and no further transactions can take place.
 
-This business network has been used to create demo application that simulate the scenario above. You can find more detail on these at https://github.com/hyperledger/composer-sample-applications/tree/master/packages/letters-of-credit
+This business network has been used to create demo application that simulate the scenario above. You can find more detail on these at https://github.com/dfkossi/composer-sample-application/tree/master/packages/letter-of-credit
 
 ## License <a name="license"></a>
 Hyperledger Project source code files are made available under the Apache License, Version 2.0 (Apache-2.0), located in the LICENSE file. Hyperledger Project documentation files are made available under the Creative Commons Attribution 4.0 International License (CC-BY-4.0), available at http://creativecommons.org/licenses/by/4.0/.

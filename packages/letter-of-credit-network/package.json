@@ -2,13 +2,13 @@
 	"engines": {
 		"composer": "^0.20.0"
 	},
-	"name": "letters-of-credit-network",
+	"name": "letter-of-credit-network",
 	"description": "letters of credit network",
-	"networkImage": "https://github.com/dfkossi/composer-sample-network/packages/letters-of-credit-network/networkimage.svg",
-	"networkImageanimated": "https://github.com/dfkossi/composer-sample-network/packages/letters-of-credit-network/networkimageanimated.svg",
+	"networkImage": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimage.svg",
+	"networkImageanimated": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimageanimated.svg",
 	"version": "0.2.6",
 	"scripts": {
-		"prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/letters-of-credit-network.bna",
+		"prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/letter-of-credit-network.bna",
 		"lint": "eslint .",
 		"postlint": "npm run licchk",
 		"licchk": "license-check-and-add",
