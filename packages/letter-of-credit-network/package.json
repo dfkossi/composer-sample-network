@@ -3,7 +3,7 @@
     "composer": "^0.20.0"
   },
   "name": "letter-of-credit-network",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TPE Lettre de credit pour le commerce Network",
   "networkImage": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimage.svg",
   "networkImageanimated": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimageanimated.svg",
