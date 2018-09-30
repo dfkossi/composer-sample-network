@@ -2,11 +2,11 @@
   "engines": {
     "composer": "^0.20.0"
   },
-  "name": "letter-of-credit-network",
-  "version": "0.0.3",
+  "name": "letters-of-credit-network",
   "description": "TPE Lettre de credit pour le commerce Network",
-  "networkImage": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimage.svg",
-  "networkImageanimated": "https://github.com/dfkossi/composer-sample-network/packages/letter-of-credit-network/networkimageanimated.svg",
+  "networkImage": "https://hyperledger.github.io/composer-sample-networks/packages/letters-of-credit-network/networkimage.svg",
+	"networkImageanimated": "https://hyperledger.github.io/composer-sample-networks/packages/letters-of-credit-network/networkimageanimated.svg",
+  "version": "0.2.6",
   "scripts": {
 
   },
@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dfkossi/composer-sample-network.git"
+    "url": "https://github.com/hyperledger/composer-sample-networks.git"
   },
   "author": "peniel winchester/ibm",
   "license": "ISC",
