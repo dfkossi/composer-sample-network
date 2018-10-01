@@ -18,12 +18,12 @@
 
 /**
  * Create the LOC asset
- * @param {org.example.loc.InitialApplication} initalAppliation - the InitialApplication transaction
+ * @param {org.tradechain.loc.InitialApplication} initalAppliation - the InitialApplication transaction
  * @transaction
  */
 async function initialApplication(application) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     const letter = factory.newResource(namespace, 'LetterOfCredit', application.letterId);
     letter.applicant = factory.newRelationship(namespace, 'Customer', application.applicant.getIdentifier());
@@ -48,12 +48,12 @@ async function initialApplication(application) { // eslint-disable-line no-unuse
 
 /**
  * Update the LOC to show that it has been approved by a given person
- * @param {org.example.loc.Approve} approve - the Approve transaction
+ * @param {org.tradechain.loc.Approve} approve - the Approve transaction
  * @transaction
  */
 async function approve(approveRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = approveRequest.loc;
 
@@ -96,12 +96,12 @@ async function approve(approveRequest) { // eslint-disable-line no-unused-vars
 
 /**
  * Reject the LOC
- * @param {org.example.loc.Reject} reject - the Reject transaction
+ * @param {org.tradechain.loc.Reject} reject - the Reject transaction
  * @transaction
  */
 async function reject(rejectRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = rejectRequest.loc;
 
@@ -127,12 +127,12 @@ async function reject(rejectRequest) { // eslint-disable-line no-unused-vars
 
 /**
  * Suggest changes to the current rules in the LOC
- * @param {org.example.loc.SuggestChanges} suggestChanges - the SuggestChanges transaction
+ * @param {org.tradechain.loc.SuggestChanges} suggestChanges - the SuggestChanges transaction
  * @transaction
  */
 async function suggestChanges(changeRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = changeRequest.loc;
 
@@ -163,12 +163,12 @@ async function suggestChanges(changeRequest) { // eslint-disable-line no-unused-
 
 /**
  * "Ship" the product
- * @param {org.example.loc.ShipProduct} shipProduct - the ShipProduct transaction
+ * @param {org.tradechain.loc.ShipProduct} shipProduct - the ShipProduct transaction
  * @transaction
  */
 async function shipProduct(shipRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = shipRequest.loc;
 
@@ -195,12 +195,12 @@ async function shipProduct(shipRequest) { // eslint-disable-line no-unused-vars
 
 /**
  * "Recieve" the product that has been "shipped"
- * @param {org.example.loc.ReceiveProduct} receiveProduct - the ReceiveProduct transaction
+ * @param {org.tradechain.loc.ReceiveProduct} receiveProduct - the ReceiveProduct transaction
  * @transaction
  */
 async function receiveProduct(receiveRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = receiveRequest.loc;
 
@@ -227,12 +227,12 @@ async function receiveProduct(receiveRequest) { // eslint-disable-line no-unused
 
 /**
  * Mark a given letter as "ready for payment"
- * @param {org.example.loc.ReadyForPayment} readyForPayment - the ReadyForPayment transaction
+ * @param {org.tradechain.loc.ReadyForPayment} readyForPayment - the ReadyForPayment transaction
  * @transaction
  */
 async function readyForPayment(paymentRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = paymentRequest.loc;
 
@@ -258,12 +258,12 @@ async function readyForPayment(paymentRequest) { // eslint-disable-line no-unuse
 
 /**
  * Close the LOC
- * @param {org.example.loc.Close} close - the Close transaction
+ * @param {org.tradechain.loc.Close} close - the Close transaction
  * @transaction
  */
 async function close(closeRequest) { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     let letter = closeRequest.loc;
 
@@ -289,45 +289,45 @@ async function close(closeRequest) { // eslint-disable-line no-unused-vars
 
 /**
  * Create the participants needed for the demo
- * @param {org.example.loc.CreateDemoParticipants} createDemoParticipants - the CreateDemoParticipants transaction
+ * @param {org.tradechain.loc.CreateDemoParticipants} createDemoParticipants - the CreateDemoParticipants transaction
  * @transaction
  */
 async function createDemoParticipants() { // eslint-disable-line no-unused-vars
     const factory = getFactory();
-    const namespace = 'org.example.loc';
+    const namespace = 'org.tradechain.loc';
 
     // create the banks
     const bankRegistry = await getParticipantRegistry(namespace + '.Bank');
-    const bank1 = factory.newResource(namespace, 'Bank', 'BoD');
-    bank1.name = 'Bank of Dinero';
+    const bank1 = factory.newResource(namespace, 'Bank', 'VIB');
+    bank1.name = 'Vietnam International Bank';
     await bankRegistry.add(bank1);
-    const bank2 = factory.newResource(namespace, 'Bank', 'EB');
-    bank2.name = 'Eastwood Banking';
+    const bank2 = factory.newResource(namespace, 'Bank', 'SEA');
+    bank2.name = 'SeaBank';
     await bankRegistry.add(bank2);
 
     // create bank employees
     const employeeRegistry = await getParticipantRegistry(namespace + '.BankEmployee');
-    const employee1 = factory.newResource(namespace, 'BankEmployee', 'matias');
-    employee1.name = 'Matías';
-    employee1.bank = factory.newRelationship(namespace, 'Bank', 'BoD');
+    const employee1 = factory.newResource(namespace, 'BankEmployee', 'emma');
+    employee1.name = 'Emma Gnofam';
+    employee1.bank = factory.newRelationship(namespace, 'Bank', 'VIB');
     await employeeRegistry.add(employee1);
-    const employee2 = factory.newResource(namespace, 'BankEmployee', 'ella');
-    employee2.name = 'Ella';
-    employee2.bank = factory.newRelationship(namespace, 'Bank', 'EB');
+    const employee2 = factory.newResource(namespace, 'BankEmployee', 'kokou');
+    employee2.name = 'Kokou Abalo';
+    employee2.bank = factory.newRelationship(namespace, 'Bank', 'SEA');
     await employeeRegistry.add(employee2);
 
     // create customers
     const customerRegistry = await getParticipantRegistry(namespace + '.Customer');
-    const customer1 = factory.newResource(namespace, 'Customer', 'alice');
-    customer1.name = 'Alice';
-    customer1.lastName= 'Hamilton';
-    customer1.bank = factory.newRelationship(namespace, 'Bank', 'BoD');
-    customer1.companyName = 'QuickFix IT';
+    const customer1 = factory.newResource(namespace, 'Customer', 'wapo');
+    customer1.name = 'Solim';
+    customer1.lastName= 'MAYABA';
+    customer1.bank = factory.newRelationship(namespace, 'Bank', 'VIB');
+    customer1.companyName = 'NAT\'S Company';
     await customerRegistry.add(customer1);
-    const customer2 = factory.newResource(namespace, 'Customer', 'bob');
-    customer2.name = 'Bob';
-    customer2.lastName= 'Appleton';
-    customer2.bank = factory.newRelationship(namespace, 'Bank', 'EB');
-    customer2.companyName = 'Conga Computers';
+    const customer2 = factory.newResource(namespace, 'Customer', 'peniel');
+    customer2.name = 'Peniel';
+    customer2.lastName= 'Winchester';
+    customer2.bank = factory.newRelationship(namespace, 'Bank', 'SEA');
+    customer2.companyName = 'KtxDreams Inc.';
     await customerRegistry.add(customer2);
 }
