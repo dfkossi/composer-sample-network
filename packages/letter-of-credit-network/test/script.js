@@ -23,21 +23,21 @@ const chai = require('chai');
 chai.should();
 chai.use(require('chai-as-promised'));
 
-const namespace = 'org.example.loc';
+const namespace = 'org.tradechain.loc';
 const letterId = 'L123';
 
-describe('Letter of Credit Network', () => {
+describe('Letters of Credit Network', () => {
     const cardStore = require('composer-common').NetworkCardStoreManager.getCardStore( { type: 'composer-wallet-inmemory' } );
     let adminConnection;
     let businessNetworkConnection;
     let factory;
 
-    let alice;
-    let bob;
-    let aliceRelationship;
-    let bobRelationship;
-    let matiasRelationship;
-    let ellaRelationship;
+    let wapo;
+    let peniel;
+    let wapoRelationship;
+    let penielRelationship;
+    let emmaRelationship;
+    let kokouRelationship;
     let rules;
     let productDetails;
     let letter;
@@ -101,51 +101,51 @@ describe('Letter of Credit Network', () => {
         factory = businessNetworkConnection.getBusinessNetwork().getFactory();
 
         // create bank participants
-        const bank1 = factory.newResource(namespace, 'Bank', 'BoD');
-        bank1.name = 'Bank of Dinero';
-        const bank2 = factory.newResource(namespace, 'Bank', 'EB');
-        bank2.name = 'Eastwood Banking';
+        const bank1 = factory.newResource(namespace, 'Bank', 'VIB');
+        bank1.name = 'Vietnam International Bank';
+        const bank2 = factory.newResource(namespace, 'Bank', 'SEA');
+        bank2.name = 'SeaBank';
 
         const bankRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.Bank');
         await bankRegistry.add(bank1);
         await bankRegistry.add(bank2);
 
         // create bank employees
-        const employee1 = factory.newResource(namespace, 'BankEmployee', 'matias');
-        employee1.name = 'Matías';
-        employee1.bank = factory.newRelationship(namespace, 'Bank', 'BoD');
+        const employee1 = factory.newResource(namespace, 'BankEmployee', 'emma');
+        employee1.name = 'Emma Gnofam';
+        employee1.bank = factory.newRelationship(namespace, 'Bank', 'VIB');
 
-        const employee2 = factory.newResource(namespace, 'BankEmployee', 'ella');
-        employee2.name = 'Ella';
-        employee2.bank = factory.newRelationship(namespace, 'Bank', 'EB');
+        const employee2 = factory.newResource(namespace, 'BankEmployee', 'kokou');
+        employee2.name = 'Kokou Abalo';
+        employee2.bank = factory.newRelationship(namespace, 'Bank', 'SEA');
 
         const employeeRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.BankEmployee');
         await employeeRegistry.add(employee1);
         await employeeRegistry.add(employee2);
 
-        // create alice participant
-        alice = factory.newResource(namespace, 'Customer', 'alice');
-        alice.name = 'Alice';
-        alice.lastName= 'Hamilton';
-        alice.bank = factory.newRelationship(namespace, 'Bank', 'BoD');
-        alice.companyName = 'QuickFix IT';
+        // create wapo participant
+        wapo = factory.newResource(namespace, 'Customer', 'wapo');
+        wapo.name = 'Solim';
+        wapo.lastName= 'MAYABA';
+        wapo.bank = factory.newRelationship(namespace, 'Bank', 'VIB');
+        wapo.companyName = 'NAT\'S Company';
 
-        // create bob participant
-        bob = factory.newResource(namespace, 'Customer', 'bob');
-        bob.name = 'Bob';
-        bob.lastName= 'Bobbins';
-        bob.bank = factory.newRelationship(namespace, 'Bank', 'EB');
-        bob.companyName = 'Conga Computers';
+        // create peniel participant
+        peniel = factory.newResource(namespace, 'Customer', 'peniel');
+        peniel.name = 'Peniel';
+        peniel.lastName= 'Winchester';
+        peniel.bank = factory.newRelationship(namespace, 'Bank', 'SEA');
+        peniel.companyName = 'KtxDreams Inc.';
 
-        // add alice and bob participants to the registry
+        // add wapo and peniel participants to the registry
         const customerRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.Customer');
-        await customerRegistry.add(alice);
-        await customerRegistry.add(bob);
+        await customerRegistry.add(wapo);
+        await customerRegistry.add(peniel);
 
-        aliceRelationship = factory.newRelationship(namespace, 'Customer', alice.getIdentifier());
-        bobRelationship = factory.newRelationship(namespace, 'Customer', bob.getIdentifier());
-        matiasRelationship = factory.newRelationship(namespace, 'BankEmployee', employee1.getIdentifier());
-        ellaRelationship = factory.newRelationship(namespace, 'BankEmployee', employee2.getIdentifier());
+        wapoRelationship = factory.newRelationship(namespace, 'Customer', wapo.getIdentifier());
+        penielRelationship = factory.newRelationship(namespace, 'Customer', peniel.getIdentifier());
+        emmaRelationship = factory.newRelationship(namespace, 'BankEmployee', employee1.getIdentifier());
+        kokouRelationship = factory.newRelationship(namespace, 'BankEmployee', employee2.getIdentifier());
 
         // create some rules for the letter
         rules = [];
@@ -166,10 +166,10 @@ describe('Letter of Credit Network', () => {
 
         // create a generic letter
         letter = factory.newResource(namespace, 'LetterOfCredit', letterId);
-        letter.applicant = factory.newRelationship(namespace, 'Customer', alice.getIdentifier());
-        letter.beneficiary = factory.newRelationship(namespace, 'Customer', bob.getIdentifier());
-        letter.issuingBank = alice.bank;
-        letter.exportingBank = bob.bank;
+        letter.applicant = factory.newRelationship(namespace, 'Customer', wapo.getIdentifier());
+        letter.beneficiary = factory.newRelationship(namespace, 'Customer', peniel.getIdentifier());
+        letter.issuingBank = wapo.bank;
+        letter.exportingBank = peniel.bank;
         letter.rules = rules;
         letter.productDetails = productDetails;
         letter.evidence = [];
@@ -185,8 +185,8 @@ describe('Letter of Credit Network', () => {
             // create and submit the InitialApplication transaction
             const initialApplicationTx = factory.newTransaction(namespace, 'InitialApplication');
             initialApplicationTx.letterId = 'newLetter';
-            initialApplicationTx.applicant = aliceRelationship;
-            initialApplicationTx.beneficiary = bobRelationship;
+            initialApplicationTx.applicant = wapoRelationship;
+            initialApplicationTx.beneficiary = penielRelationship;
             initialApplicationTx.rules = rules;
             initialApplicationTx.productDetails = productDetails;
             await businessNetworkConnection.submitTransaction(initialApplicationTx);
@@ -197,12 +197,12 @@ describe('Letter of Credit Network', () => {
             letter.letterId.should.deep.equal('newLetter');
             letter.applicant.should.deep.equal(initialApplicationTx.applicant);
             letter.beneficiary.should.deep.equal(initialApplicationTx.beneficiary);
-            letter.issuingBank.should.deep.equal(alice.bank);
-            letter.exportingBank.should.deep.equal(bob.bank);
+            letter.issuingBank.should.deep.equal(wapo.bank);
+            letter.exportingBank.should.deep.equal(peniel.bank);
             letter.rules.should.deep.equal(rules);
             letter.productDetails.should.deep.equal(productDetails);
             letter.evidence.should.deep.equal([]);
-            letter.approval.should.deep.equal([aliceRelationship]);
+            letter.approval.should.deep.equal([wapoRelationship]);
             letter.status.should.deep.equal('AWAITING_APPROVAL');
         });
     });
@@ -212,59 +212,59 @@ describe('Letter of Credit Network', () => {
             // create and submit an Approve transaction
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = aliceRelationship;
+            approveTx.approvingParty = wapoRelationship;
             await businessNetworkConnection.submitTransaction(approveTx);
 
             const approvedLetter = await letterRegistry.get(letterId);
-            approvedLetter.approval.should.deep.equal([aliceRelationship]);
+            approvedLetter.approval.should.deep.equal([wapoRelationship]);
         });
 
         it('should not allow the same person to approve the letter twice', async () => {
             // update the letter to have already been approved by Alice
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship];
+            updatedLetter.approval = [wapoRelationship];
             await letterRegistry.update(updatedLetter);
 
             // attempt to submit the Approve transaction and check the error
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = aliceRelationship;
+            approveTx.approvingParty = wapoRelationship;
             return businessNetworkConnection.submitTransaction(approveTx).should.be.rejectedWith('This person has already approved this letter of credit');
         });
 
         it('should not allow an employee of a bank to approve when another employee of the same bank already has', async () => {
-            const otherBoDEmployee = factory.newResource(namespace, 'BankEmployee', 'trevor');
-            otherBoDEmployee.name = 'Trevor';
-            otherBoDEmployee.bank = factory.newRelationship(namespace, 'Bank', 'BoD');
+            const otherVIBEmployee = factory.newResource(namespace, 'BankEmployee', 'trevor');
+            otherVIBEmployee.name = 'Trevor';
+            otherVIBEmployee.bank = factory.newRelationship(namespace, 'Bank', 'VIB');
             const employeeRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.BankEmployee');
-            await employeeRegistry.add(otherBoDEmployee);
+            await employeeRegistry.add(otherVIBEmployee);
 
             // update the letter to have already been approved by Alice
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [factory.newRelationship(namespace, 'BankEmployee', otherBoDEmployee.getIdentifier())];
+            updatedLetter.approval = [factory.newRelationship(namespace, 'BankEmployee', otherVIBEmployee.getIdentifier())];
             await letterRegistry.update(updatedLetter);
 
             // attempt to submit the Approve transaction and check the error
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = matiasRelationship;
+            approveTx.approvingParty = emmaRelationship;
             return businessNetworkConnection.submitTransaction(approveTx).should.be.rejectedWith('Your bank has already approved of this request');
         });
 
         it('should mark the letter as \'approved\' when all four parties have approved the letter', async () => {
             // update the letter to have been approved by three people already
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship];
             await letterRegistry.update(updatedLetter);
 
             // create and submit an Approve transaction
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = bobRelationship;
+            approveTx.approvingParty = penielRelationship;
             await businessNetworkConnection.submitTransaction(approveTx);
 
             const approvedLetter = await letterRegistry.get(letterId);
-            approvedLetter.approval.should.deep.equal([aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship]);
+            approvedLetter.approval.should.deep.equal([wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship]);
             approvedLetter.status.should.deep.equal('APPROVED');
         });
 
@@ -277,7 +277,7 @@ describe('Letter of Credit Network', () => {
             // attempt to submit an Approve transaction and check the error
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = aliceRelationship;
+            approveTx.approvingParty = wapoRelationship;
             return businessNetworkConnection.submitTransaction(approveTx).should.be.rejectedWith('This letter of credit has already been closed');
         });
 
@@ -290,7 +290,7 @@ describe('Letter of Credit Network', () => {
             // attempt to submit an Approve transaction and check the error
             const approveTx = factory.newTransaction(namespace, 'Approve');
             approveTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
-            approveTx.approvingParty = aliceRelationship;
+            approveTx.approvingParty = wapoRelationship;
             return businessNetworkConnection.submitTransaction(approveTx).should.be.rejectedWith('This letter of credit has already been closed');
         });
     });
@@ -311,7 +311,7 @@ describe('Letter of Credit Network', () => {
         it('should be unable to submit a Reject transaction on a letter that has already been closed', async () => {
             // update the letter to have already been closed
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
@@ -356,18 +356,18 @@ describe('Letter of Credit Network', () => {
             const suggestChangesTx = factory.newTransaction(namespace, 'SuggestChanges');
             suggestChangesTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
             suggestChangesTx.rules = newRules;
-            suggestChangesTx.suggestingParty = matiasRelationship;
+            suggestChangesTx.suggestingParty = emmaRelationship;
             await businessNetworkConnection.submitTransaction(suggestChangesTx);
 
             const changedLetter = await letterRegistry.get(letterId);
             changedLetter.rules.should.deep.equal(newRules);
-            changedLetter.approval.should.deep.equal([matiasRelationship]);
+            changedLetter.approval.should.deep.equal([emmaRelationship]);
         });
 
         it('should be unable to submit a SuggestChanges transaction on a letter that has already been shipped', async () => {
             // update the letter to have been shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'SHIPPED';
             await letterRegistry.update(updatedLetter);
 
@@ -375,14 +375,14 @@ describe('Letter of Credit Network', () => {
             const suggestChangesTx = factory.newTransaction(namespace, 'SuggestChanges');
             suggestChangesTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
             suggestChangesTx.rules = newRules;
-            suggestChangesTx.suggestingParty = matiasRelationship;
+            suggestChangesTx.suggestingParty = emmaRelationship;
             return businessNetworkConnection.submitTransaction(suggestChangesTx).should.be.rejectedWith('The product has already been shipped');
         });
 
         it('should be unable to submit a SuggestChanges transaction on a letter that has already been received', async () => {
             // update the letter to have been shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'RECEIVED';
             await letterRegistry.update(updatedLetter);
 
@@ -390,7 +390,7 @@ describe('Letter of Credit Network', () => {
             const suggestChangesTx = factory.newTransaction(namespace, 'SuggestChanges');
             suggestChangesTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
             suggestChangesTx.rules = newRules;
-            suggestChangesTx.suggestingParty = matiasRelationship;
+            suggestChangesTx.suggestingParty = emmaRelationship;
             return businessNetworkConnection.submitTransaction(suggestChangesTx).should.be.rejectedWith('The product has already been shipped');
         });
 
@@ -398,7 +398,7 @@ describe('Letter of Credit Network', () => {
         it('should be unable to submit a SuggestChanges transaction on a letter that has already been closed', async () => {
             // update the letter to have already been closed
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
@@ -406,7 +406,7 @@ describe('Letter of Credit Network', () => {
             const suggestChangesTx = factory.newTransaction(namespace, 'SuggestChanges');
             suggestChangesTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
             suggestChangesTx.rules = newRules;
-            suggestChangesTx.suggestingParty = matiasRelationship;
+            suggestChangesTx.suggestingParty = emmaRelationship;
             return businessNetworkConnection.submitTransaction(suggestChangesTx).should.be.rejectedWith('This letter of credit has already been closed');
         });
 
@@ -420,7 +420,7 @@ describe('Letter of Credit Network', () => {
             const suggestChangesTx = factory.newTransaction(namespace, 'SuggestChanges');
             suggestChangesTx.loc = factory.newRelationship(namespace, 'LetterOfCredit', letterId);
             suggestChangesTx.rules = newRules;
-            suggestChangesTx.suggestingParty = matiasRelationship;
+            suggestChangesTx.suggestingParty = emmaRelationship;
             return businessNetworkConnection.submitTransaction(suggestChangesTx).should.be.rejectedWith('This letter of credit has already been closed');
         });
     });
@@ -437,7 +437,7 @@ describe('Letter of Credit Network', () => {
         it('should mark the letter as \'shipped\' if it has been fully approved', async () => {
             // update the created letter so that it is ready to be shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'APPROVED';
             await letterRegistry.update(updatedLetter);
 
@@ -455,7 +455,7 @@ describe('Letter of Credit Network', () => {
         it('should do nothing if the letter has already been marked as \'shipped\'', async () => {
             // update the letter so that is has already been marked as shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'SHIPPED';
             await letterRegistry.update(updatedLetter);
 
@@ -469,7 +469,7 @@ describe('Letter of Credit Network', () => {
         it('should be unable to submit a ShipProduct transaction on a letter that has already been closed', async () => {
             // update the letter to have already been closed
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
@@ -506,7 +506,7 @@ describe('Letter of Credit Network', () => {
         it('should not update the status if the letter has not been marked as \'shipped\'', async () => {
             // update the letter to be approved but not shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'APPROVED';
             await letterRegistry.update(updatedLetter);
 
@@ -519,7 +519,7 @@ describe('Letter of Credit Network', () => {
         it('should mark the letter as \'received\' if it has been shipped', async () => {
             // update the letter to be shipped
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'SHIPPED';
             await letterRegistry.update(updatedLetter);
 
@@ -535,7 +535,7 @@ describe('Letter of Credit Network', () => {
         it('should do nothing if the letter has already been marked as \'received\'', async () => {
             // update the letter so that is has already been marked as received
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'RECEIVED';
             await letterRegistry.update(updatedLetter);
 
@@ -548,7 +548,7 @@ describe('Letter of Credit Network', () => {
         it('should be unable to submit a ReceiveProduct transaction on a letter that has already been closed', async () => {
             // update the letter to have already been closed
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
@@ -581,7 +581,7 @@ describe('Letter of Credit Network', () => {
 
         it('should mark the letter as ready for payment', async () => {
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'RECEIVED';
             await letterRegistry.update(updatedLetter);
 
@@ -595,7 +595,7 @@ describe('Letter of Credit Network', () => {
 
         it('should not ready payment the letter if it is marked as \'closed\'', async () => {
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
@@ -606,7 +606,7 @@ describe('Letter of Credit Network', () => {
 
         it('should not ready payment the letter if it is marked as \'rejected\'', async () => {
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'REJECTED';
             await letterRegistry.update(updatedLetter);
 
@@ -617,7 +617,7 @@ describe('Letter of Credit Network', () => {
 
         it('should not ready payment the letter if it is marked as \'ready for payment\'', async () => {
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'READY_FOR_PAYMENT';
             await letterRegistry.update(updatedLetter);
 
@@ -639,7 +639,7 @@ describe('Letter of Credit Network', () => {
         it('should mark the letter as closed', async () => {
             // update the letter so it is ready to close
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'READY_FOR_PAYMENT';
             await letterRegistry.update(updatedLetter);
 
@@ -657,7 +657,7 @@ describe('Letter of Credit Network', () => {
         it('should be unable to submit a Close transaction on a letter that has already been closed', async () => {
             // update the letter to have already been closed
             let updatedLetter = await letterRegistry.get(letterId);
-            updatedLetter.approval = [aliceRelationship, matiasRelationship, ellaRelationship, bobRelationship];
+            updatedLetter.approval = [wapoRelationship, emmaRelationship, kokouRelationship, penielRelationship];
             updatedLetter.status = 'CLOSED';
             await letterRegistry.update(updatedLetter);
 
